@@ -44,7 +44,7 @@ if vehicleType is not None:
       )
     if modelo_selecionado is not None:
       modelId = modelo_selecionado["code"]
-    # st.write("Código do modelo:", modelId)
+  
     
 
       st.write("Selecione o ano do veiculo: ")
