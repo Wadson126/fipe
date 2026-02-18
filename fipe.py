@@ -52,7 +52,6 @@ if vehicleType is not None:
     )
   if marca_selecionada is not None:
     codigo_marca = marca_selecionada["code"]
-
     brandId = codigo_marca    
 
   
