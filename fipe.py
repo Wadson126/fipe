@@ -1,5 +1,3 @@
-# streamlit run d:/Projetos/ESTUDOS_PYTHON/fipe.py
-
 import streamlit as st
 import requests 
 import pandas as pd
@@ -27,7 +25,7 @@ if vehicleType is not None:
     )
   if marca_selecionada is not None:
     codigo_marca = marca_selecionada["code"]
-    # st.write("Código da marca:", codigo_marca)
+
     brandId = codigo_marca    
 
   
