@@ -2,21 +2,48 @@ import streamlit as st
 import requests 
 import pandas as pd
 
+@st.cache_data(ttl=86400)
+def get_marcas(vehicleType):
+    return requests.get(
+        f"https://fipe.parallelum.com.br/api/v2/{vehicleType}/brands/"
+    ).json()
+
+@st.cache_data
+def get_modelos(vehicleType, brandId):
+    return requests.get(
+        f"https://fipe.parallelum.com.br/api/v2/{vehicleType}/brands/{brandId}/models/"
+    ).json()
+
+@st.cache_data
+def get_anos(vehicleType, brandId, modelId):
+    return requests.get(
+        f"https://fipe.parallelum.com.br/api/v2/{vehicleType}/brands/{brandId}/models/{modelId}/years"
+    ).json()
+
+@st.cache_data
+def get_fipe(vehicleType, brandId, modelId, yearId):
+    return requests.get(
+        f"https://fipe.parallelum.com.br/api/v2/{vehicleType}/brands/{brandId}/models/{modelId}/years/{yearId}"
+    ).json()
 
 st.write("Selecione o tipo de veiculo: ")
 tipos = [None, "cars", "motorcycles", "trucks"]
+labels = {
+    "cars": "Carros",
+    "motorcycles": "Motocicletas",
+    "trucks": "Caminhões"
+}
 with st.container(border=True):
     vehicleType = st.selectbox(
        "Tipos", 
        tipos, 
-       format_func=lambda x: "Selecione..." if x is None else x)
+       format_func=lambda x: "Selecione..." if x is None else labels[x])
 
 if vehicleType is not None:
    
   st.write("Selecione a marca do veículo:")
 
-  response = requests.get(f"https://fipe.parallelum.com.br/api/v2/{vehicleType}/brands/")
-  marcas = response.json()
+  marcas = get_marcas(vehicleType)
   with st.container(border=True):
     marca_selecionada = st.selectbox(
         "Marcas",
@@ -31,8 +58,8 @@ if vehicleType is not None:
   
 
     st.write("Selecione o Modelo do veiculo: ")
-    response = requests.get(f"https://fipe.parallelum.com.br/api/v2/{vehicleType}/brands/{brandId}/models/")
-    modelos = response.json()
+    
+    modelos = get_modelos(vehicleType, brandId)
 
     with st.container(border=True):
       modelo_selecionado = st.selectbox(
@@ -46,8 +73,8 @@ if vehicleType is not None:
     
 
       st.write("Selecione o ano do veiculo: ")
-      response = requests.get(f"https://fipe.parallelum.com.br/api/v2/{vehicleType}/brands/{brandId}/models/{modelId}/years")
-      Ano = response.json()
+
+      Ano = get_anos(vehicleType, brandId, modelId)
 
       with st.container(border=True):
         ano_selecionado = st.selectbox(
@@ -61,8 +88,7 @@ if vehicleType is not None:
       
         st.write("Fipe selecionada:")
         if modelo_selecionado:
-            response = requests.get(f"https://fipe.parallelum.com.br/api/v2/{vehicleType}/brands/{brandId}/models/{modelId}/years/{yearId}")
-            dados = response.json()
+            dados = get_fipe(vehicleType, brandId, modelId, yearId)
             df = pd.DataFrame([dados])
             st.dataframe(df, use_container_width=True)
 
