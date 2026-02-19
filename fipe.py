@@ -100,15 +100,16 @@ if vehicleType is not None:
         if modelo_selecionado:
             dados = get_fipe(vehicleType, brandId, modelId, yearId)
             df = pd.DataFrame([dados])
-            df = df.rename(columns = {'price':'Preço',
+            df.rename(columns = {'price':'Preço',
                                       'brand':'Marca', 
                                       'model':'Modelo', 
                                       'modelYear':'Ano',
                                       'fuel': 'Combustível',
                                       'codeFipe': 'Codigo Fipe',
                                       'referenceMonth': 'Mês de Referência'
-                                      })
-            df = df.drop(columns = {'vehicleType', 'fuelAcronym'})
+                                      }, inplace = True)
+            
+            df.drop(columns = {'vehicleType', 'fuelAcronym'}, inplace = True)
             st.dataframe(df, use_container_width=True, hide_index=True)
 
 
