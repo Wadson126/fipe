@@ -26,6 +26,17 @@ def get_fipe(vehicleType, brandId, modelId, yearId):
         f"https://fipe.parallelum.com.br/api/v2/{vehicleType}/brands/{brandId}/models/{modelId}/years/{yearId}"
     ).json()
 
+def formatar_ano(x):
+    if x is None:
+        return "Selecione..."
+    
+    nome = x["name"]
+
+    if nome.startswith("32000"):
+        return nome.replace("32000", "0 km")
+    
+    return nome
+
 st.write("Selecione o tipo de veiculo: ")
 tipos = [None, "cars", "motorcycles", "trucks"]
 labels = {
@@ -79,7 +90,7 @@ if vehicleType is not None:
         ano_selecionado = st.selectbox(
             "Ano",
             [None] + Ano,
-            format_func=lambda x: "Selecione..." if x is None else x["name"]
+            format_func=formatar_ano
         )
       if ano_selecionado is not None:
         yearId = ano_selecionado["code"]
